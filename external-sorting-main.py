@@ -22,7 +22,7 @@ class externalSort:
             mid = len(arr)//2
             lefthalf = arr[:mid]
             righthalf = arr[mid:]
-
+    
             #recursion
             self.mergeSort(lefthalf)
             self.mergeSort(righthalf)
@@ -36,8 +36,9 @@ class externalSort:
                     arr[k] = lefthalf[i]
                     i=i+1
                 else:
-                    arr[k] = righthalf[j]
+                    arr[k] = righthalf[j] 
                     j=j+1
+                k=k+1
             
             while i < len(lefthalf):
                 arr[k]=lefthalf[i]
@@ -61,7 +62,7 @@ class externalSort:
         else:
             #base case to stop the recursion
             smallest = parentNode 
-
+          
         if right_node < arrayLength and str(arr[right_node].letter).encode('utf-8') < str(arr[smallest].letter).encode('utf-8'):
             smallest = right_node 
         
@@ -72,8 +73,11 @@ class externalSort:
             self.minheap(arr, smallest, arrayLength)
 
     def initializeMinheap(self, arr):
-        l = len(arr) - 1
-        mid = int(l / 2)
+        if len(arr) % 2 == 0: 
+            l = len(arr) - 1
+        else:
+            l = len(arr) 
+            mid = int(l / 2)
         while mid >= 0:
             self.minheap(arr, mid, l)
             mid -= 1
@@ -117,21 +121,14 @@ class externalSort:
         while True:
             # read each line and store into line
             line = fileHandler.readline()
-            print("each line: ", line)
     
             if not line:
                 break
             
             line = line.rstrip().split(" ")
-            print("line splitted: ", line)
             line = [i + '\n' for i in line]
-            print("after added \n", line)
-
-            sortedLine = self.mergeSort(line) 
-            print("line sorted: ", sortedLine)
-            tempArray.append(sortedLine)
-            print("sortedLine appended to tempArray: ", tempArray)
-            
+            tempArray.append(line)
+    
             size += 1
             if size % partitionSize == 0:
                 
@@ -141,11 +138,9 @@ class externalSort:
                         flat_list.append(bytes(item, "utf-8"))
                 
                 # sort scoped words
-                tempArray = sorted(flat_list) 
+                tempArray = self.mergeSort(flat_list) 
 
-                print("tempArray: ", tempArray)
-                print("type of tempArray: ", type(tempArray))
-                
+                print("flattened and sorted tempArray: ", tempArray)
                 # create a new file under the temp directory
                 tempFile = tempfile.NamedTemporaryFile(dir=self.cwd + "/temp", delete=False)
 
@@ -156,7 +151,6 @@ class externalSort:
                 self.tempFileHandlerList.append(tempFile)
                 tempArray = [] 
                 flat_list = []
-                print("after tempArray cleared: ", tempArray)
 
 
 if __name__ == '__main__':
@@ -165,5 +159,5 @@ if __name__ == '__main__':
     smallFileSize = 5
     obj = externalSort()
     obj.splitFiles(largeFileName, smallFileSize)
-    # obj.mergeFiles(outputFileName)
+    obj.mergeFiles(outputFileName)
         

@@ -75,32 +75,60 @@ class externalSort:
         
         
     def splitFiles(self, fileName, partitionSize):
-        fileHandler = open(fileName, "rb")
+        fileHandler = open(fileName, "r")
+        tempLine = []
         tempArray = []
+        flat_list = []
         size = 0
         while True:
-            letter = fileHandler.readline()
-            if not letter:
+            # read each line and store into line
+            line = fileHandler.readline()
+            print("each line: ", line)
+    
+            if not line:
                 break
-            tempArray.append(letter)
+            
+            line = line.rstrip().split(" ")
+            print("line splitted: ", line)
+            line = [i + '\n' for i in line]
+            print("after added \n", line)
+
+            sortedLine = sorted(line) 
+            print("line sorted: ", sortedLine)
+            tempArray.append(sortedLine)
+            print("sortedLine appended to tempArray: ", tempArray)
+            
             size += 1
             if size % partitionSize == 0:
+                
+                # flatten the tempArray
+                for sublist in tempArray:
+                    for item in sublist:
+                        flat_list.append(bytes(item, "utf-8"))
+                
                 # sort scoped words
-                tempArray = sorted(tempArray, key=lambda word: word.strip())
+                tempArray = sorted(flat_list) 
+
+                print("tempArray: ", tempArray)
+                print("type of tempArray: ", type(tempArray))
+                
                 # create a new file under the temp directory
                 tempFile = tempfile.NamedTemporaryFile(dir=self.cwd + "/temp", delete=False)
-                # store sorted words to the created file
+
                 tempFile.writelines(tempArray)
+
                 tempFile.seek(0)
                 # store all the file handlers to the global list
                 self.tempFileHandlerList.append(tempFile)
                 tempArray = [] 
+                flat_list = []
+                print("after tempArray cleared: ", tempArray)
 
 
 if __name__ == '__main__':
     largeFileName = 'largefile'
     outputFileName = 'output.txt'
-    smallFileSize = 10
+    smallFileSize = 5
     obj = externalSort()
     obj.splitFiles(largeFileName, smallFileSize)
     obj.mergeFiles(outputFileName)

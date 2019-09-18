@@ -17,6 +17,40 @@ class externalSort:
     def getCurrentDir(self):
         self.cwd = os.getcwd() 
 
+    def mergeSort(self, arr):
+        if len(arr) > 1:
+            mid = len(arr)//2
+            lefthalf = arr[:mid]
+            righthalf = arr[mid:]
+
+            #recursion
+            self.mergeSort(lefthalf)
+            self.mergeSort(righthalf)
+
+            i=0
+            j=0
+            k=0
+
+            while i < len(lefthalf) and j < len(righthalf):
+                if lefthalf[i] < righthalf[j]:
+                    arr[k] = lefthalf[i]
+                    i=i+1
+                else:
+                    arr[k] = righthalf[j]
+                    j=j+1
+            
+            while i < len(lefthalf):
+                arr[k]=lefthalf[i]
+                i=i+1
+                k=k+1
+
+            while j < len(righthalf):
+                arr[k]=righthalf[j]
+                j=j+1
+                k=k+1
+
+        return arr
+        
     def minheap(self, arr, parentNode, arrayLength):
         left_node = 2 * parentNode + 1
         right_node = 2 * parentNode + 2
@@ -93,7 +127,7 @@ class externalSort:
             line = [i + '\n' for i in line]
             print("after added \n", line)
 
-            sortedLine = sorted(line) 
+            sortedLine = self.mergeSort(line) 
             print("line sorted: ", sortedLine)
             tempArray.append(sortedLine)
             print("sortedLine appended to tempArray: ", tempArray)
@@ -131,5 +165,5 @@ if __name__ == '__main__':
     smallFileSize = 5
     obj = externalSort()
     obj.splitFiles(largeFileName, smallFileSize)
-    obj.mergeFiles(outputFileName)
+    # obj.mergeFiles(outputFileName)
         

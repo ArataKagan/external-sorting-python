@@ -9,7 +9,8 @@
 ## File contents 
 
 external-sorting-main.py : The main file for all the code<br/>
-input.txt : The original large file<br/>
+large-input.txt : The original large file<br/>
+small-input.txt : The small text file<br/>
 output.txt : The output file<br/>
 random-words-generator.py : Includes code for generating random words 
  

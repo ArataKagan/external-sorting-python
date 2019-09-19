@@ -120,7 +120,6 @@ class externalSort:
         
     def splitFiles(self, fileName, partitionSize):
         fileHandler = open(fileName, "r")
-        tempLine = []
         tempArray = []
         
         size = 0
@@ -137,7 +136,6 @@ class externalSort:
             size += 1
             if size % partitionSize == 0:
                 
-
                 # sort each line
                 for i in tempArray:
                     i = self.mergeSort(i) 

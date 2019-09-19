@@ -176,9 +176,9 @@ class externalSort:
 
     
 if __name__ == '__main__':
-    largeFileName = 'input.txt'
+    largeFileName = 'small-input.txt'
     outputFileName = 'output.txt'
-    smallFileSize = 16
+    smallFileSize = 5
     obj = externalSort()
     obj.splitFiles(largeFileName, smallFileSize)
     obj.mergeFiles(outputFileName)

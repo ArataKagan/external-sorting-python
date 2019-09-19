@@ -104,14 +104,14 @@ class externalSort:
             sorted_word.append(min.letter)
             # extract next letter from the file 
             fileHandler = min.fileHandler 
-            new_letter = fileHandler.readline().strip()
-            new_letter = new_letter.decode("utf-8")
+            new_line = fileHandler.readline().strip()
+            new_line = new_line.decode("utf-8")
             
-            if not new_letter:
-                new_letter = sys.maxsize
+            if not new_line:
+                new_line = sys.maxsize
             else:
-                new_letter = new_letter 
-            file_list[0] = headNode(new_letter, fileHandler)
+                new_line = new_line 
+            file_list[0] = headNode(new_line, fileHandler)
             self.minheap(file_list, 0, len(file_list))
         f = open(outputFile, 'w')
         for i in sorted_word:
@@ -124,7 +124,6 @@ class externalSort:
         
         size = 0
         while True:
-            # read each line and store into line
             line = fileHandler.readline()
           
             if not line:
@@ -135,23 +134,25 @@ class externalSort:
     
             size += 1
             if size % partitionSize == 0:
-                
-                # sort each line
-                for i in tempArray:
-                    i = self.mergeSort(i) 
 
                 objCollection = {}
                 orderedList = []
-                stringList = ""
-                collection = []
- 
+                finalString = ""
+                
+                # sort each line using mergeSort
+                for i in tempArray:
+                    i = self.mergeSort(i) 
+
+                # extract the first line and store as a key
                 for line in tempArray:
                     lineObj = {}
                     lineObj = {line[0] : line} 
                     objCollection.update(lineObj) 
 
+                # Sort object based on the assigned key
                 objCollection = collections.OrderedDict(sorted(objCollection.items()))
                
+                # Assign the value (line) back to a list 
                 for k, v in objCollection.items():
                     orderedList.append(v)
                 
@@ -159,14 +160,12 @@ class externalSort:
                     orderedList[line][4] = orderedList[line][4]+'\n' 
 
                 for i in range(len(orderedList)):
-                    print(orderedList[i])
                     for item in orderedList[i]:
-                        print(item)
-                        stringList += ' '+item 
+                        finalString += ' '+item 
 
                 tempFile = tempfile.NamedTemporaryFile(mode="w+b", dir=self.cwd + "/temp", delete=False)
 
-                tempFile.write(bytes(stringList, "utf-8"))
+                tempFile.write(bytes(finalString, "utf-8"))
                 tempFile.seek(0)
                 # store all the file handlers to the global list
                 self.tempFileHandlerList.append(tempFile)

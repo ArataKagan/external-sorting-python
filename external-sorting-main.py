@@ -1,6 +1,7 @@
 import os
 import tempfile
 import sys 
+import collections
 
 class headNode:
     def __init__(self, letter, fileHandler):
@@ -73,11 +74,12 @@ class externalSort:
             self.minheap(arr, smallest, arrayLength)
 
     def initializeMinheap(self, arr):
+        global mid 
         if len(arr) % 2 == 0: 
             l = len(arr) - 1
         else:
             l = len(arr) 
-            mid = int(l / 2)
+        mid = int(l / 2)
         while mid >= 0:
             self.minheap(arr, mid, l)
             mid -= 1
@@ -88,7 +90,10 @@ class externalSort:
 
         # get the first letter from each file, instantiate headNode object and append to list
         for tempFileList in self.tempFileHandlerList:
-            letter = tempFileList.readline().strip() 
+            letter = tempFileList.readline().strip()
+            print(letter)
+            print(letter.decode("utf-8"))
+
             file_list.append(headNode(letter, tempFileList)) 
 
         self.initializeMinheap(file_list)
@@ -102,6 +107,7 @@ class externalSort:
             # extract next letter from the file 
             fileHandler = min.fileHandler 
             new_letter = fileHandler.readline().strip()
+            
             if not new_letter:
                 new_letter = sys.maxsize
             else:
@@ -116,48 +122,63 @@ class externalSort:
         fileHandler = open(fileName, "r")
         tempLine = []
         tempArray = []
-        flat_list = []
+        
         size = 0
         while True:
             # read each line and store into line
             line = fileHandler.readline()
-    
+           
             if not line:
                 break
             
             line = line.rstrip().split(" ")
-            line = [i + '\n' for i in line]
             tempArray.append(line)
     
             size += 1
             if size % partitionSize == 0:
-                
-                # flatten the tempArray
-                for sublist in tempArray:
-                    for item in sublist:
-                        flat_list.append(bytes(item, "utf-8"))
-                
-                # sort scoped words
-                tempArray = self.mergeSort(flat_list) 
+                # sort each line
+                for i in tempArray:
+                    i = self.mergeSort(i) 
+ 
+                # print("tempArray sorted: ", tempArray)
 
-                print("flattened and sorted tempArray: ", tempArray)
-                # create a new file under the temp directory
+                objCollection = {}
+                orderedList = []
+                collection = []
+                
+                for line in tempArray:
+                    lineObj = {}
+                    lineObj = {line[0] : line} 
+                    objCollection.update(lineObj) 
+
+                objCollection = collections.OrderedDict(sorted(objCollection.items()))
+               
+                for k, v in objCollection.items():
+                    orderedList.append(v)
+            
+                for line in range(len(orderedList)):
+                    orderedList[line][4] = orderedList[line][4]+'\n'
+                
+                # print("ordered list: ", orderedList)
+                for line in orderedList:
+                    for item in line:
+                        collection.append(bytes(item, "utf-8"))  
+
+                print("collection: ", collection)
                 tempFile = tempfile.NamedTemporaryFile(dir=self.cwd + "/temp", delete=False)
-
-                tempFile.writelines(tempArray)
-
+                tempFile.writelines(collection)
                 tempFile.seek(0)
                 # store all the file handlers to the global list
                 self.tempFileHandlerList.append(tempFile)
                 tempArray = [] 
-                flat_list = []
 
-
+    
 if __name__ == '__main__':
-    largeFileName = 'largefile'
+    largeFileName = 'input.txt'
     outputFileName = 'output.txt'
-    smallFileSize = 5
+    smallFileSize = 16
     obj = externalSort()
     obj.splitFiles(largeFileName, smallFileSize)
     obj.mergeFiles(outputFileName)
+    
         

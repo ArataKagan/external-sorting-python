@@ -91,9 +91,7 @@ class externalSort:
         # get the first letter from each file, instantiate headNode object and append to list
         for tempFileList in self.tempFileHandlerList:
             letter = tempFileList.readline().strip()
-            print(letter)
-            print(letter.decode("utf-8"))
-
+            letter = letter.decode("utf-8")
             file_list.append(headNode(letter, tempFileList)) 
 
         self.initializeMinheap(file_list)
@@ -103,10 +101,11 @@ class externalSort:
             if min.letter == sys.maxsize:
                 break
 
-            sorted_word.append(min.letter.decode())
+            sorted_word.append(min.letter)
             # extract next letter from the file 
             fileHandler = min.fileHandler 
             new_letter = fileHandler.readline().strip()
+            new_letter = new_letter.decode("utf-8")
             
             if not new_letter:
                 new_letter = sys.maxsize
@@ -115,7 +114,8 @@ class externalSort:
             file_list[0] = headNode(new_letter, fileHandler)
             self.minheap(file_list, 0, len(file_list))
         f = open(outputFile, 'w')
-        f.writelines(", ".join(sorted_word))
+        for i in sorted_word:
+            f.write(i+'\n')
         
         
     def splitFiles(self, fileName, partitionSize):
@@ -127,7 +127,7 @@ class externalSort:
         while True:
             # read each line and store into line
             line = fileHandler.readline()
-           
+          
             if not line:
                 break
             
@@ -136,16 +136,17 @@ class externalSort:
     
             size += 1
             if size % partitionSize == 0:
+                
+
                 # sort each line
                 for i in tempArray:
                     i = self.mergeSort(i) 
- 
-                # print("tempArray sorted: ", tempArray)
 
                 objCollection = {}
                 orderedList = []
+                stringList = ""
                 collection = []
-                
+ 
                 for line in tempArray:
                     lineObj = {}
                     lineObj = {line[0] : line} 
@@ -155,18 +156,19 @@ class externalSort:
                
                 for k, v in objCollection.items():
                     orderedList.append(v)
-            
-                for line in range(len(orderedList)):
-                    orderedList[line][4] = orderedList[line][4]+'\n'
                 
-                # print("ordered list: ", orderedList)
-                for line in orderedList:
-                    for item in line:
-                        collection.append(bytes(item, "utf-8"))  
+                for line in range(len(orderedList)):
+                    orderedList[line][4] = orderedList[line][4]+'\n' 
 
-                print("collection: ", collection)
-                tempFile = tempfile.NamedTemporaryFile(dir=self.cwd + "/temp", delete=False)
-                tempFile.writelines(collection)
+                for i in range(len(orderedList)):
+                    print(orderedList[i])
+                    for item in orderedList[i]:
+                        print(item)
+                        stringList += ' '+item 
+
+                tempFile = tempfile.NamedTemporaryFile(mode="w+b", dir=self.cwd + "/temp", delete=False)
+
+                tempFile.write(bytes(stringList, "utf-8"))
                 tempFile.seek(0)
                 # store all the file handlers to the global list
                 self.tempFileHandlerList.append(tempFile)

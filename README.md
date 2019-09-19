@@ -8,9 +8,9 @@
 
 ## File contents 
 
-external-sorting-main.py : The main file for all the code 
-input.txt : The original large file
-output.txt : The output file 
+external-sorting-main.py : The main file for all the code<br/>
+input.txt : The original large file<br/>
+output.txt : The output file<br/>
 random-words-generator.py : Includes code for generating random words 
  
 ## Choice of Technology 

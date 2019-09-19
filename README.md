@@ -23,7 +23,7 @@ Python 3
 Merge sort is used to sort each line's words' order. I chose merge sort among many other sorting algorithms due to its faster runtime and its efficiency and ease of implementation. 
 
 ### Min Heap Sort 
-Min heap sort is used to 
+Min heap sort is used to sort each line from sub files. 
 
 ## How I solve the problem 
 

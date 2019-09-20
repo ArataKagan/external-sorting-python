@@ -151,13 +151,14 @@ class externalSort:
 
                 # Sort object based on the assigned key
                 objCollection = collections.OrderedDict(sorted(objCollection.items()))
-               
+           
                 # Assign the value (line) back to a list 
                 for k, v in objCollection.items():
-                    orderedList.append(v)
-                
+                    orderedList.append(v) 
+               
                 for line in range(len(orderedList)):
-                    orderedList[line][4] = orderedList[line][4]+'\n' 
+                    #FIX 1: changed index range to select the last item for each line 
+                    orderedList[line][len(orderedList[line])-1] = orderedList[line][len(orderedList[line])-1]+'\n' 
 
                 for i in range(len(orderedList)):
                     for item in orderedList[i]:
@@ -173,9 +174,9 @@ class externalSort:
 
     
 if __name__ == '__main__':
-    largeFileName = 'small-input.txt'
+    largeFileName = 'large-input.txt'
     outputFileName = 'output.txt'
-    smallFileSize = 5
+    smallFileSize = 16
     obj = externalSort()
     obj.splitFiles(largeFileName, smallFileSize)
     obj.mergeFiles(outputFileName)
